@@ -1,4 +1,4 @@
-<img width="976" height="161" alt="image" src="https://github.com/user-attachments/assets/e90aea77-b7ee-4fb2-a38e-23077eea5e8a" /># Hierchial-Loss-Yolo26n
+# Hierchial-Loss-Yolo26n
 
 
 <img width="1920" height="1100" alt="val_batch2_labels" src="https://github.com/user-attachments/assets/d768eb27-515f-496f-8c70-9671617ce575" />
