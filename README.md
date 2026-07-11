@@ -1,103 +1,90 @@
-# Hierarchical Vietnamese Traffic Sign Detection using YOLO26n
+# Hierarchical Vietnamese Traffic Sign Detection with YOLO26n
+### Incorporating QCVN 41 Semantic Hierarchies through Hierarchical Label Smoothing
 
-> Improving Vietnamese traffic sign detection by incorporating the QCVN 41 traffic sign hierarchy into YOLO26n through Hierarchical Label Smoothing (HLS).
+> A research project investigating whether **Hierarchical Label Smoothing (HLS)** can improve Vietnamese traffic sign detection by leveraging the semantic hierarchy defined in the QCVN 41 road traffic sign regulation.
+
+---
 
 <!-- ===================================================================================== -->
-<!-- TODO: Replace with a banner image or project logo                                     -->
-<!-- Recommended size: ~1200 x 400                                                         -->
+<!-- TODO: Replace with a project banner (recommended size: ~1200 × 500)                   -->
+<!-- Suggested content: Pipeline overview or representative detection result               -->
 <!-- ===================================================================================== -->
 
 <p align="center">
-  <img src="images/banner.png" width="90%">
+    <img src="assets/banner.png" width="90%">
+</p>
+
+<!-- ===================================================================================== -->
+<!-- TODO: (Optional) Add a second figure showing qualitative detections or final results  -->
+<!-- ===================================================================================== -->
+
+<p align="center">
+    <img src="assets/results_overview.png" width="90%">
 </p>
 
 ---
 
-## Project Description
+# Project Description
 
-This repository contains the code, experiments, and resources for the project **"Hierarchical Vietnamese Traffic Sign Detection using YOLO26n and Hierarchical Label Smoothing."** The objective of this work is to investigate whether incorporating the semantic hierarchy defined by the Vietnamese **QCVN 41** traffic sign regulation can improve object detection performance without modifying the YOLO26n architecture. Instead of treating all 52 traffic sign classes as independent labels, the proposed **Hierarchical Label Smoothing (HLS)** method redistributes the classification target among semantically related sibling classes while preserving the original inference pipeline.
+Traffic sign detection is a fundamental component of Advanced Driver Assistance Systems (ADAS) and autonomous driving. Most object detectors formulate traffic sign recognition as a flat classification problem, treating every sign as an independent class despite many signs sharing similar semantic meanings. In Vietnam, however, traffic signs are formally organized under the **QCVN 41** regulation into five high-level categories: **Prohibitory, Warning, Mandatory, Information,** and **Supplementary**.
 
-The project is evaluated on the **Vietnamese Traffic Signs (VNTS)** dataset through a controlled comparison against a flat-label baseline, followed by multiple hyperparameter ablation studies. Besides evaluating detection performance, the project also investigates *when* hierarchical supervision is beneficial, *why* it succeeds or fails under different configurations, and the limitations of applying regulatory hierarchies to object detection.
-
-Key contributions include:
-
-- Hierarchical annotation of the VNTS dataset based on the QCVN 41 taxonomy.
-- Implementation of Hierarchical Label Smoothing for YOLO26n.
-- No architectural modifications and zero additional inference cost.
-- Comprehensive hyperparameter ablation of HLS configurations.
-- Statistical significance analysis using Wilcoxon signed-rank tests.
-- Analysis of how semantic category size influences hierarchical supervision.
-- Discussion of the practical limitations and failure cases of HLS.
-
-<!-- ===================================================================================== -->
-<!-- TODO: Add a qualitative comparison image.                                             -->
-<!-- Example: Baseline vs HLS predictions on the same image.                               -->
-<!-- ===================================================================================== -->
-
-<p align="center">
-  <img src="images/qualitative_results.png" width="90%">
-</p>
+This project investigates whether incorporating this semantic hierarchy into the classification objective can improve object detection performance without modifying the detector architecture. We propose **Hierarchical Label Smoothing (HLS)**, a loss-level method that redistributes target probabilities among semantically related traffic signs while preserving the original YOLO26n architecture and inference pipeline. Extensive experiments on the **Vietnamese Traffic Signs (VNTS)** dataset compare HLS against a standard flat-label baseline through multiple hyperparameter ablations and statistical significance tests, revealing not only when hierarchical supervision improves performance, but also the conditions under which it becomes ineffective.
 
 ---
 
-## Experimental Highlights
+# Contributions
 
-| Configuration | α | β | λcls | mAP@0.5 |
-|:--------------|--:|--:|------:|---------:|
-| Baseline | — | — | 0.5 | **0.9487** |
-| HLS | 0.05 | 0.10 | 0.5 | 0.8922 |
-| HLS (Wide Gap) | 0.01 | 0.20 | 0.5 | 0.8735 |
-| HLS (High Classification Weight) | 0.05 | 0.10 | 1.5 | 0.9219 |
-| **HLS (Combined)** | **0.01** | **0.20** | **1.5** | **0.9583** |
+This project makes the following contributions:
 
-**Main findings**
-
-- The best HLS configuration achieved **95.83% mAP@0.5**, outperforming the flat-label baseline.
-- Global performance improvement is statistically significant (Wilcoxon *p* = 0.0265).
-- Increasing the classification loss weight is critical for hierarchical supervision.
-- Category size, rather than class frequency, is the primary factor determining HLS effectiveness.
-- Poorly calibrated HLS configurations may reduce detection performance, highlighting the importance of hyperparameter tuning.
-
-<!-- ===================================================================================== -->
-<!-- TODO: Replace with performance plots or ablation figure                               -->
-<!-- ===================================================================================== -->
-
-<p align="center">
-  <img src="images/results.png" width="85%">
-</p>
+- Introduces the first **QCVN 41 hierarchical annotation** for the VNTS dataset.
+- Implements **Hierarchical Label Smoothing (HLS)** for YOLO26n without modifying the network architecture.
+- Preserves identical inference speed by applying hierarchy only during training.
+- Performs controlled comparisons against a flat-label baseline under identical training conditions.
+- Conducts hyperparameter ablation on smoothing strength and classification loss weight.
+- Identifies **semantic category size** as a major factor influencing the effectiveness of hierarchical supervision.
+- Reports both the strengths and practical limitations of HLS through statistical significance analysis.
 
 ---
 
-## Repository Structure
+# Research Questions
 
-```text
-Hierarchical-Loss-YOLO26n/
-│
-├── datasets/                 # VNTS dataset configuration
-├── experiments/              # Experiment configurations
-├── models/                   # Modified YOLO26n implementation
-├── notebooks/                # EDA and visualization notebooks
-├── scripts/                  # Training and evaluation scripts
-├── results/                  # Saved checkpoints and evaluation outputs
-├── paper/                    # Research paper
-├── report/                   # Project report
-├── images/                   # README figures
-├── requirements.txt
-└── README.md
-```
+This project aims to answer the following research questions:
+
+1. Can Hierarchical Label Smoothing improve Vietnamese traffic sign detection compared to conventional flat-label training?
+
+2. How do smoothing parameters and classification loss weighting influence HLS performance?
+
+3. Which traffic sign categories benefit most from hierarchical supervision?
+
+4. What limitations arise when using regulatory semantic hierarchies for object detection?
 
 ---
 
-## Installation
+# Table of Contents
 
-Clone this repository:
+1. [Installation](#installation)
+2. [Dataset](#dataset)
+3. [Method](#method)
+4. [Experimental Results](#experimental-results)
+5. [Usage](#usage)
+6. [Repository Structure](#repository-structure)
+7. [Limitations](#limitations)
+8. [Future Work](#future-work)
+9. [Citation](#citation)
+10. [Acknowledgements](#acknowledgements)
+
+---
+
+# Installation
+
+Clone the repository.
 
 ```bash
-git clone https://github.com/<your_username>/Hierarchical-Loss-YOLO26n.git
-cd Hierarchical-Loss-YOLO26n
+git clone https://github.com/<your-username>/<repository-name>.git
+cd <repository-name>
 ```
 
-Create a virtual environment (optional but recommended):
+Create a virtual environment (recommended).
 
 ```bash
 python -m venv venv
@@ -105,38 +92,37 @@ python -m venv venv
 # Windows
 venv\Scripts\activate
 
-# Linux / macOS
+# Linux/macOS
 source venv/bin/activate
 ```
 
-Install dependencies:
+Install the required dependencies.
 
 ```bash
 pip install -r requirements.txt
 ```
 
-<!-- TODO:
-If using a modified Ultralytics package, describe installation here.
-Example:
-pip install -e .
--->
+<!-- ===================================================================================== -->
+<!-- TODO: If your project requires a modified Ultralytics package, explain it here.       -->
+<!-- Example: pip install -e .                                                              -->
+<!-- ===================================================================================== -->
 
 ---
 
-## Dataset
+# Dataset
 
-The experiments are conducted on the **Vietnamese Traffic Signs (VNTS)** dataset obtained from Kaggle.
-
-Dataset summary:
+Experiments were conducted on the **Vietnamese Traffic Signs (VNTS)** dataset, publicly available on Kaggle.
 
 | Property | Value |
 |----------|-------:|
 | Images | 3,216 |
-| Instances | 8,334 |
-| Classes | 52 |
-| Split | 2,552 train / 639 validation |
+| Annotated Instances | 8,334 |
+| Traffic Sign Classes | 52 |
+| Hierarchy Levels | 2 |
+| Semantic Categories | 5 |
+| Train / Validation Split | 2,552 / 639 |
 
-The original dataset is reorganized using the **QCVN 41** hierarchy into five semantic categories:
+For this project, every traffic sign class was mapped to the **QCVN 41** taxonomy, resulting in five semantic categories:
 
 - Prohibitory
 - Warning
@@ -144,157 +130,201 @@ The original dataset is reorganized using the **QCVN 41** hierarchy into five se
 - Information
 - Supplementary
 
-<!-- TODO:
-Provide the dataset download link.
+Unlike the original flat-label dataset, this hierarchy enables semantically related traffic signs to share supervision during training through Hierarchical Label Smoothing.
 
-If redistribution is not permitted, explain how users can obtain the dataset.
--->
+> **Dataset:**  
+> <!-- TODO: Insert Kaggle dataset link -->
 
-Expected directory structure:
-
-```text
-dataset/
-│
-├── images/
-│   ├── train/
-│   └── val/
-│
-├── labels/
-│   ├── train/
-│   └── val/
-│
-└── vnts.yaml
-```
-
----
-
-## Usage
-
-### Training the Baseline
-
-```bash
-python train_baseline.py
-```
-
-### Training with Hierarchical Label Smoothing
-
-```bash
-python train_hls.py
-```
-
-<!-- TODO:
-Replace the commands above with your actual training commands.
-If training uses Ultralytics CLI, include the exact command here.
--->
-
----
-
-## Method Overview
-
-The overall workflow is summarized below.
+> **Hierarchy Mapping:**  
+> <!-- TODO: Link hierarchy mapping (.csv/.json/.yaml) if available -->
 
 <!-- ===================================================================================== -->
-<!-- TODO: Replace with your pipeline diagram                                              -->
+<!-- TODO: Insert a sample annotated VNTS image here.                                      -->
 <!-- ===================================================================================== -->
 
 <p align="center">
-  <img src="images/pipeline.png" width="95%">
+    <img src="assets/sample_dataset.png" width="80%">
 </p>
 
-Training pipeline:
+---
+
+# Method
+
+Rather than modifying the YOLO26n detector itself, this project introduces hierarchy exclusively within the classification loss.
+
+The overall workflow consists of:
 
 ```
 VNTS Dataset
       │
       ▼
-Exploratory Data Analysis
+Dataset Analysis
       │
       ▼
-Hierarchy Mapping (QCVN 41)
+QCVN 41 Hierarchy Mapping
       │
       ▼
 YOLO26n Training
       │
-      ├──────────────┐
-      ▼              ▼
+      ├───────────────┐
+      ▼               ▼
  Flat Labels      Hierarchical
                   Label Smoothing
-      │              │
-      └──────┬───────┘
+      │               │
+      └──────┬────────┘
              ▼
-     Performance Evaluation
+      Model Evaluation
+```
+
+Hierarchical Label Smoothing redistributes the classification target probability from the ground-truth class toward semantically related sibling classes while leaving the detector architecture, bounding box regression, and inference procedure unchanged. Consequently, both the baseline model and the HLS model share identical computational complexity during deployment.
+
+<!-- ===================================================================================== -->
+<!-- TODO: Replace with your pipeline figure.                                              -->
+<!-- ===================================================================================== -->
+
+<p align="center">
+    <img src="assets/pipeline.png" width="90%">
+</p>
+
+---
+
+# Experimental Results
+
+Five model configurations were evaluated.
+
+| Model | α | β | λcls | mAP@0.5 |
+|:------|--:|--:|------:|---------:|
+| Baseline | — | — | 0.5 | **0.9487** |
+| HLS | 0.05 | 0.10 | 0.5 | 0.8922 |
+| HLS (Wide Gap) | 0.01 | 0.20 | 0.5 | 0.8735 |
+| HLS (High Classification Weight) | 0.05 | 0.10 | 1.5 | 0.9219 |
+| **HLS (Combined)** | **0.01** | **0.20** | **1.5** | **0.9583** |
+
+### Main Findings
+
+- The best-performing configuration achieved **95.83% mAP@0.5**, outperforming the flat-label baseline.
+- Global improvement is statistically significant (*p* = 0.0265, Wilcoxon signed-rank test).
+- Increasing the classification loss weight is essential for hierarchical supervision to become effective.
+- Performance improvements correlate more strongly with **semantic category size** than with class frequency.
+- Hierarchical supervision is highly sensitive to hyperparameter selection; poorly configured HLS may degrade detection performance.
+
+<!-- ===================================================================================== -->
+<!-- TODO: Insert result figures (recommended)                                             -->
+<!-- 1. Baseline vs HLS comparison                                                         -->
+<!-- 2. Hyperparameter ablation                                                            -->
+<!-- 3. Per-category improvement                                                           -->
+<!-- ===================================================================================== -->
+
+<p align="center">
+    <img src="assets/ablation.png" width="48%">
+    <img src="assets/category_analysis.png" width="48%">
+</p>
+
+---
+
+# Usage
+
+### Train the Flat Baseline
+
+```bash
+# TODO: Replace with your actual training command
+python train_baseline.py
+```
+
+### Train with Hierarchical Label Smoothing
+
+```bash
+# TODO: Replace with your actual training command
+python train_hls.py
+```
+
+### Evaluate a Trained Model
+
+```bash
+# TODO: Replace with your evaluation command
+python evaluate.py
+```
+
+### Reproduce the Experiments
+
+<!-- ===================================================================================== -->
+<!-- TODO: Explain how each experimental configuration (Baseline, A, A_v2, A_v3, A_v4)    -->
+<!-- can be reproduced.                                                                    -->
+<!-- ===================================================================================== -->
+
+---
+
+# Repository Structure
+
+```text
+project/
+│
+├── assets/                # Figures used in README
+├── configs/               # Dataset and experiment configurations
+├── datasets/              # Dataset utilities
+├── notebooks/             # EDA and visualization notebooks
+├── scripts/               # Training and evaluation scripts
+├── ultralytics/           # Modified YOLO26 implementation
+├── results/               # Experimental outputs
+├── paper/                 # Research paper
+├── report/                # Project report
+├── requirements.txt
+└── README.md
 ```
 
 ---
 
-## Results
+# Limitations
 
-<!-- TODO:
-Replace with confusion matrices, qualitative examples, WandB plots,
-or AP comparison figures.
--->
-
-Example outputs may include:
-
-- Detection examples
-- Precision–Recall curves
-- Confusion matrices
-- Ablation plots
-- Per-class AP comparison
-- Training curves
-
----
-
-## Limitations
-
-The project intentionally reports both the strengths and limitations of Hierarchical Label Smoothing.
+This work intentionally reports both the strengths and limitations of Hierarchical Label Smoothing.
 
 Current limitations include:
 
 - Performance is highly sensitive to HLS hyperparameters.
-- Large semantic categories receive weaker hierarchical supervision.
-- Rare classes remain statistically underpowered due to limited validation samples.
-- The QCVN 41 taxonomy reflects regulatory semantics rather than visual similarity, which may limit the effectiveness of hierarchy-based supervision.
+- Large semantic categories receive weaker hierarchical supervision because probability mass is distributed among more sibling classes.
+- The QCVN 41 hierarchy reflects regulatory semantics rather than visual similarity.
+- Rare classes contain relatively few validation samples, limiting statistical power.
+- The experiments were conducted on a single Vietnamese traffic sign dataset; generalization to larger datasets remains unverified.
 
 ---
 
-## Future Work
+# Future Work
 
-Potential directions include:
+Potential directions for future research include:
 
-- Adaptive category-size-aware label smoothing.
-- Hierarchies based on visual similarity instead of regulatory categories.
-- Hierarchical cosine loss.
-- Evaluation on larger Vietnamese traffic sign datasets.
-- Extension to newer YOLO architectures.
+- Adaptive category-aware smoothing weights.
+- Hierarchies based on visual similarity instead of regulatory semantics.
+- Hierarchical cosine loss and alternative hierarchical objectives.
+- Evaluation on larger and more diverse Vietnamese traffic sign datasets.
+- Extension to future YOLO architectures.
 
 ---
 
-## Citation
+# Citation
 
 If you find this repository useful, please consider citing:
 
 ```bibtex
-@misc{phan2026hierarchical,
-  title={Hierarchical Vietnamese Traffic Sign Detection using YOLO26n and Hierarchical Label Smoothing},
-  author={Phan Van Tu},
-  year={2026}
+@misc{yourcitation,
+    title={Hierarchical Vietnamese Traffic Sign Detection using YOLO26n and Hierarchical Label Smoothing},
+    author={Your Name},
+    year={2026}
 }
 ```
 
-<!-- TODO:
-Replace with your final paper citation after publication.
--->
+<!-- ===================================================================================== -->
+<!-- TODO: Replace with your final publication citation.                                   -->
+<!-- ===================================================================================== -->
 
 ---
 
-## Acknowledgements
+# Acknowledgements
 
-This project was developed as part of the Project-Based Learning (PBL) course at **FPT University**.
+This project was completed as part of the **Project-Based Learning (PBL)** curriculum at **FPT University**.
 
-Built upon:
+This work builds upon:
 
 - Ultralytics YOLO26
-- VNTS Dataset
+- Vietnamese Traffic Signs (VNTS) Dataset
 - Weights & Biases
-- QCVN 41 Vietnamese Road Traffic Sign Regulation
+- QCVN 41: National Technical Regulation on Road Traffic Signs
